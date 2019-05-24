@@ -6,21 +6,10 @@ let operator = '';
 function onReady() {
     //display calculation history
     displayHistory();
-    //get the calculation operator => to be refactored!!!
-    $('#additionButton').on('click', function () {
-        operator = "+";
-        console.log(operator);
-    })
-    $('#subtractionButton').on('click', function () {
-        operator = "-";
-        console.log(operator);
-    })
-    $('#multiplicationButton').on('click', function () {
-        operator = "*";
-        console.log(operator);
-    })
-    $('#divisionButton').on('click', function () {
-        operator = "/";
+
+    //get the calculation operator => refactored by using .html to get the value
+    $('.operatorButton').on('click', function() {
+        operator = $(this).html();
         console.log(operator);
     })
 
@@ -60,6 +49,14 @@ function getInputValue() {
         operator: operator
     }
     console.log(calculationObj);
+    if(firstNumber === '' || secondNumber === '' || operator === '') {
+        console.log('in the if statement');
+        $('#result').html(`<h2>fields can not be left blank</h2>`)
+        return;
+    }
+    //set the operator value back to empty string
+    operator = '';
+    console.log(calculationObj);
 
     $.ajax({
         method: 'POST',
@@ -79,6 +76,7 @@ function getInputValue() {
 //function to clear the user input
 function clearInput() {
     $('input').val('');
+    $('#result').empty();
 }
 
 
