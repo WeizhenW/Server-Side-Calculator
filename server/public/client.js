@@ -6,18 +6,16 @@ let operator = '';
 function onReady() {
     //display calculation history
     displayHistory();
-
     //get the calculation operator => refactored by using .html to get the value
     $('.operatorButton').on('click', function() {
         operator = $(this).html();
-        console.log(operator);
     })
-
     //get input fields value by clicking the submit
     $('#submitButton').on('click', getInputValue);
-
     //clear the field
     $('#clearButton').on('click', clearInput);
+    //get the entry from history
+    $('#historyUl').on('click', 'li', retrieveHistory);
 
 }
 
@@ -30,9 +28,11 @@ function displayHistory() {
         response => {
             $('#historyUl').empty();
             response.forEach(element => {
-                $('#historyUl').append(`
+                let itemToAppend = $(`
                 <li>${element.firstNumber} ${element.operator} ${element.secondNumber} = ${element.result}</li>
-                `)
+                `);
+                $('#historyUl').append(itemToAppend);
+                itemToAppend.data('id', element.id);
             })
         }
 
@@ -48,15 +48,13 @@ function getInputValue() {
         secondNumber: secondNumber,
         operator: operator
     }
-    console.log(calculationObj);
     if(firstNumber === '' || secondNumber === '' || operator === '') {
-        console.log('in the if statement');
-        $('#result').html(`<h2>fields can not be left blank</h2>`)
+        $('#result').html(`<h2>fields can not be left blank!</h2>`);
         return;
     }
+
     //set the operator value back to empty string
     operator = '';
-    console.log(calculationObj);
 
     $.ajax({
         method: 'POST',
@@ -73,10 +71,29 @@ function getInputValue() {
 }//end of getInputValue
 
 
-//function to clear the user input
+//function to clear the user input and the result display
 function clearInput() {
     $('input').val('');
     $('#result').empty();
-}
+} //end of clearInput function
 
+//function to retrieve the history entry
+function retrieveHistory() {
+    //get the id clicked(note: id this.data is an obj!)
+    let idClicked = $(this).data().id;
+    //hit the history/:id route to get the object in the array with a specific id
+    $.ajax({
+        method: 'GET',
+        url: '/history/'+idClicked
+    }).then(
+        response => {
+            //set the input values from the response object with the required id
+            $('#firstNumInput').val(response.firstNumber);
+            $('#secondNumInput').val(response.secondNumber);
+            operator = response.operator;
+            //call the calculation function
+            getInputValue();
+        }
+    )
 
+}//end of the retrieveHistory
