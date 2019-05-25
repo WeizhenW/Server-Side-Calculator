@@ -6,27 +6,71 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="jquery-3.4.1.min.js"></script>
     <script src="client.js"></script>
+    <link rel="stylesheet" href="style.css">
     <title>Calculator</title>
 </head>
 <body>
-    <h1>Server Side Calculator</h1>
-
-    <div id="inputFields">
-        <input id="firstNumInput" type="text">
-        <button id="additionButton" class="operatorButton">+</button>
-        <button id="subtractionButton" class="operatorButton">-</button>
-        <button id="multiplicationButton" class="operatorButton">*</button>
-        <button id="divisionButton"" class="operatorButton">/</button>
-        <input id="secondNumInput" type="text">
-        <button id="submitButton">=</button>
-        <button id="clearButton">C</button>
-
+    <div id="header">
+        <h1>Server Side Calculator</h1>
     </div>
 
-    <div id="result"></div>
+    <div id="container">
+        <div id="inputFields">
+            <h3>Type in the numbers</h3>
+            <div id="firstNumDiv" class="left">
+                <label>Number 1</label>
+                <input id="firstNumInput" type="text">
+            </div>
+            <div id="operatorDiv" class="left">
+                <button id="additionButton" class="operatorButton">+</button>
+                <button id="subtractionButton" class="operatorButton">-</button>
+                <button id="multiplicationButton" class="operatorButton">*</button>
+                <button id="divisionButton" class="operatorButton">/</button>
+            </div>
+            
+            <div id="secondNumDiv" class="left">                
+                <label>Number 2</label>
+                <input id="secondNumInput" type="text">
+            </div>
+            
+            <div id="buttonsDiv" class="left">
+                <button id="submitButton">=</button>
+                <button id="clearButton">C</button>  
+            </div>
 
-    <div id="historyDiv">
-        <ul id="historyUl"></ul>
+            <div id="result"></div>
+
+            <div id="historyDiv">
+                <ul id="historyUl"></ul>
+            </div>
+            
+        </div>
+        
+        <div id="calculator">
+            <h3>Click the key pad</h3>
+            <div id="keyPad">
+                <input type="text" id="keyInput">
+                <button id="keyClearButton">C</button>
+                <div id="numberKeys">
+                    <button class="numberKey">7</button>
+                    <button class="numberKey">8</button>
+                    <button class="numberKey">9</button>
+                    <button class="numberKey">+</button>
+                    <button class="numberKey">4</button>
+                    <button class="numberKey">5</button>
+                    <button class="numberKey">6</button>
+                    <button class="numberKey">-</button>
+                    <button class="numberKey">1</button>
+                    <button class="numberKey">2</button>
+                    <button class="numberKey">3</button>
+                    <button class="numberKey">*</button>
+                    <button class="numberKey">0</button>
+                    <button class="numberKey">.</button>
+                    <button class="numberKey">=</button>
+                    <button class="numberKey">/</button>
+                </div>            
+            </div>
+        </div>
     </div>
     
 </body>
