@@ -1,7 +1,9 @@
+//base goal part
 console.log('in js');
 $(document).ready(onReady);
 
 let operator = '';
+
 
 function onReady() {
     //display calculation history
@@ -9,13 +11,16 @@ function onReady() {
     //get the calculation operator => refactored by using .html to get the value
     $('.operatorButton').on('click', function() {
         operator = $(this).html();
+        $(this).addClass('operatorClicked');
     })
     //get input fields value by clicking the submit
-    $('#submitButton').on('click', getInputValue);
-    //clear the field
+    $('#submitButton').on('click', getInputValueAndCalculate);
+    //clear the fields
     $('#clearButton').on('click', clearInput);
     //get the entry from history
     $('#historyUl').on('click', 'li', retrieveHistory);
+    //clear history
+    $('#clearHistory').on('click', clearHistory);
 
 }
 
@@ -23,7 +28,7 @@ function onReady() {
 function displayHistory() {
     $.ajax({
         method: 'GET',
-        url: '/history'
+        url: '/history1'
     }).then(
         response => {
             $('#historyUl').empty();
@@ -40,7 +45,7 @@ function displayHistory() {
 }// end of displayHistory
 
 //function to get input value
-function getInputValue() {
+function getInputValueAndCalculate() {
     let firstNumber = $('#firstNumInput').val();
     let secondNumber = $('#secondNumInput').val();
     let calculationObj = {
@@ -49,16 +54,17 @@ function getInputValue() {
         operator: operator
     }
     if(firstNumber === '' || secondNumber === '' || operator === '') {
-        $('#result').html(`<h2>fields can not be left blank!</h2>`);
+        alert('fields can not be empty');
         return;
     }
 
     //set the operator value back to empty string
     operator = '';
+    $('.operatorButton').removeClass('operatorClicked');
 
     $.ajax({
         method: 'POST',
-        url: '/calculation',
+        url: '/calculation1',
         data: calculationObj
     }).then(
         response => {
@@ -68,12 +74,13 @@ function getInputValue() {
         }
     )
 
-}//end of getInputValue
+}//end of getInputValueAndCalculate
 
 
 //function to clear the user input and the result display
 function clearInput() {
-    $('input').val('');
+    $('#firstNumInput').val('');
+    $('#secondNumInput').val('');
     $('#result').empty();
 } //end of clearInput function
 
@@ -84,16 +91,45 @@ function retrieveHistory() {
     //hit the history/:id route to get the object in the array with a specific id
     $.ajax({
         method: 'GET',
-        url: '/history/'+idClicked
+        url: '/history1/'+idClicked
     }).then(
         response => {
             //set the input values from the response object with the required id
             $('#firstNumInput').val(response.firstNumber);
             $('#secondNumInput').val(response.secondNumber);
             operator = response.operator;
-            //call the calculation function
-            getInputValue();
+            let buttonId = '';
+            //get the button id from the response
+            switch(operator){
+                case '+':
+                    buttonId = 'additionButton';
+                    break;
+                case '-':
+                    buttonId = 'subtractionButton';
+                    break;
+                case '*':
+                    buttonId = 'multiplicationButton';
+                    break;
+                case '/':
+                    buttonId = 'divisionButton';
+                    break;
+            }
+            $(`#${buttonId}`).addClass('operatorClicked');
         }
     )
 
-}//end of the retrieveHistory
+}//end of retrieveHistory
+
+//function to clear history
+function clearHistory() {
+    $.ajax({
+        method: 'DELETE',
+        url: '/delete'
+    }).then(() => {
+        displayHistory();
+    }  
+    )
+}//end of clearHistory
+
+
+
