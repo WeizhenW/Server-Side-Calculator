@@ -92,6 +92,12 @@ function calculation() {
         operator: operatorKey
     } 
 
+    //   //if any field is empty, pop up an alert
+    //   if(number1 === '' || number2 === '' || operatorKey === '') {
+    //     alert('fields can not be empty');
+    //     return;
+    // }
+
     $.ajax({
         //hit the calculation post route
         method: 'POST',
@@ -108,6 +114,9 @@ function calculation() {
             $('#keyInput').val(inputFormula);
             //display result
             $('#result2').html(`<h2>${result}</h2>`);
+            //reset value for inputFormula and inputNumber
+            inputFormula = '';
+            inputNumber = '';
             //call function to refresh the history
             displayHistory2();
         }
@@ -118,9 +127,7 @@ function calculation() {
 function clearInput2() {
     $('#keyInput').val('');
     $('#result2').empty();
-    //reset value for inputFormula and inputNumber
-    inputFormula = '';
-    inputNumber = '';
+    
 }//end of clearInput2
 
 //function to clear history
@@ -160,3 +167,9 @@ function retrieveHistory2() {
     )
 
 }//end of retrieveHistory2
+
+//----------POSSIBLE IMPROVEMENT ------
+//for the stretch goal: 
+//accept both clicking keypad and user input from keyboard?
+//if only number1 is entered (without entering the operator) => calculator not working
+//what if calculating more than 2 numbers?
