@@ -1,31 +1,28 @@
-//stretch goal part
-console.log('in js file 2');
-
-let operatorKey = '';
-let inputNumber = '';
-let number1 = 0;
-let number2 = 0;
-let inputFormula = '';
-
-
+//the client.js file for the stretch goal (right side in the browser)
 $(document).ready(onReady);
 
-function onReady() {
-    //display history
-    displayHistory2();    
-    //get input value from the number key clicked
-    $('.number').on('click', getKeyValue);
-    //get operator
-    $('.operatorKey').on('click', getOperator);
-    //submit to calculate
-    $('.equal').on('click', calculation);
-    //clear the input button
-    $('#keyClearButton').on('click', clearInput2);
-    //clear history
-    $('#clearHistory2').on('click', clearHistory2);
+let operatorKey = '';//variable to hold the operator input
+let inputNumber = '';//variable to temporarily hold each input number
+let number1 = 0;//first number in the calculation
+let number2 = 0;//second number in the calculation
+let inputFormula = '';//variable to temporarily hold the entire input formula
 
-     //get the entry from history
-     $('#historyUl2').on('click', 'li', retrieveHistory2);
+function onReady() {
+    //call function display history
+    displayHistory2();    
+    //add click event listener to all the number keys
+    //to get input value from the number key clicked
+    $('.number').on('click', getKeyValue);
+    //add click event listener to all operator keys to get operator
+    $('.operatorKey').on('click', getOperator);
+    //add click event listener to '=' key to calculate
+    $('.equal').on('click', calculation);
+    //add click event listener to clear the input button
+    $('#keyClearButton').on('click', clearInput2);
+    //add click event listener to clear history
+    $('#clearHistory2').on('click', clearHistory2);
+    //add click event listener to get one entry from history
+    $('#historyUl2').on('click', 'li', retrieveHistory2);
 }
 
 //display the history function
@@ -50,35 +47,45 @@ function displayHistory2() {
 
 //function to get the number key clicked
 function getKeyValue() {
-    //get input value when key clicked
+    //get input value when a single number key clicked
     let keyClicked = $(this).html();
-    //concat the value to the variable to store the whole string
+    //concat this number to the inputFormula variable to store the whole string
     inputFormula += keyClicked;
-    //store input number
+    //concat this number to the inputNumber variable to store the input number
     inputNumber += keyClicked;
-    //clear the keyClicked value
+    //reset the keyClicked value
     keyClicked = '';
-    //pass the value to the input field
+    //setter - pass the inputFormula value to the input field
     $('#keyInput').val(inputFormula);
-    // console.log(inputNumber);
 }//end of getKeyValue
 
 //function to get the operator
 function getOperator() {
+    //when the operator key is clicked, assign the value from inputNumber to number1
+    //number1 will be used as the first number in the calculation
     number1 = Number(inputNumber);
+    //reset inputNumber
     inputNumber = '';
+    //get operator value
     operatorKey = $(this).html();
+    //concat the operator clicked to the inputFormula
     inputFormula += operatorKey;
+    //val setter to the input field
     $('#keyInput').val(inputFormula);
-
 }// end of getOperator
 
 //function calculation 
 function calculation() {
+    //when the '=' key is clicked, assign the inputNumber value to the number2 variable
+    //number2 will be used as second number in the calculation
     number2 = Number(inputNumber);
+    //reset value
     inputNumber = '';
+    //concat '=' to the inputFormula string
     inputFormula += '=';
+    //val setter
     $('#keyInput').val(inputFormula);
+    //build the object to pass to the server side for calculation
     let calculationObj = {
         firstNumber: number1,
         secondNumber: number2,
@@ -86,15 +93,22 @@ function calculation() {
     } 
 
     $.ajax({
+        //hit the calculation post route
         method: 'POST',
         url: '/calculation2',
         data: calculationObj
     }). then(
         response => {
+            //response from the post route is a single object which contains two numbers, operator value and the result
+            //get calculation result from the response
             let result = response.result;
+            //concat to the inputFormula
             inputFormula += result;
+            //val setter
             $('#keyInput').val(inputFormula);
+            //display result
             $('#result2').html(`<h2>${result}</h2>`);
+            //call function to refresh the history
             displayHistory2();
         }
     )
@@ -104,6 +118,7 @@ function calculation() {
 function clearInput2() {
     $('#keyInput').val('');
     $('#result2').empty();
+    //reset value for inputFormula and inputNumber
     inputFormula = '';
     inputNumber = '';
 }//end of clearInput2
@@ -121,7 +136,7 @@ function clearHistory2() {
 
 //function to retrieve the history entry
 function retrieveHistory2() {
-    //get the id clicked(note: id this.data is an obj!)
+    //get the id clicked(note: this.data is an obj!!)
     let idClicked = $(this).data().id;
     //hit the history/:id route to get the object in the array with a specific id
     $.ajax({
@@ -129,12 +144,16 @@ function retrieveHistory2() {
         url: '/history2/'+idClicked
     }).then(
         response => {
-            //set the input values from the response object with the required id
+            //response is a single object with numbers, operator and result for that specific id
+            //concat to the inputFormula string
             inputFormula = response.firstNumber + response.operator + response.secondNumber;
+            //val setter
             $('#keyInput').val(inputFormula);
+            //get number1 from the response object
             number1 = Number(response.firstNumber);
+            //get inputNumber from response object (will be assigned to number2 when call the calculation function)
             inputNumber = Number(response.secondNumber);
-            // console.log(number1, response.firstNumber, number2, response.secondNumber);
+            //get operator from the response object
             operatorKey = response.operator;
        
         }
