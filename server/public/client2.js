@@ -127,6 +127,9 @@ function calculation() {
 function clearInput2() {
     $('#keyInput').val('');
     $('#result2').empty();
+    //reset value for inputFormula and inputNumber
+    inputFormula = '';
+    inputNumber = '';
     
 }//end of clearInput2
 
