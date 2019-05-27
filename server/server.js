@@ -82,6 +82,9 @@ app.post('/calculation2', (req, res) => {
         case '/':
             result = Number(firstNumber) / Number(secondNumber);
             break;
+        default:
+            result = Number(firstNumber);
+            break;
     }
     let calculationObj = {
         firstNumber: firstNumber,

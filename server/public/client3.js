@@ -40,21 +40,37 @@ function calculation2() {
         // console.log('reg E', regE);
         let operatorIndex = inputFormula.search(regE);
         // console.log('operatorIndex', operatorIndex);
-        number1 = inputFormula.slice(0, operatorIndex);
-        // console.log('number1', number1);
-        operatorKey = inputFormula.slice(operatorIndex, operatorIndex+1);
-        // console.log('operatorKey', operatorKey);
-        number2 = inputFormula.slice(operatorIndex+1, inputFormula.length-1);
-        // console.log('number2', number2);
+        if(operatorIndex === -1) {
+            number1 = inputFormula.slice(0, inputFormula.length-1);
+            number2 = '';
+            operatorKey = '';
+            console.log(number1, number2, operatorKey);
+        } else {   
+            number1 = inputFormula.slice(0, operatorIndex);
+            // console.log('number1', number1);
+            operatorKey = inputFormula.slice(operatorIndex, operatorIndex+1);
+            // console.log('operatorKey', operatorKey);
+            number2 = inputFormula.slice(operatorIndex+1, inputFormula.length-1);
+            // console.log('number2', number2);
+
+        }
 
     } else {
         // console.log('in else');
         let operatorIndex = inputFormula.slice(1, inputFormula.length).search(regE);
         // console.log('operatorIndex', operatorIndex);
-        number1 = inputFormula.slice(0, operatorIndex+1);
-        operatorKey = inputFormula.slice(operatorIndex+1, operatorIndex+2);
-        number2 = inputFormula.slice(operatorIndex+2, inputFormula.length-1);
-        console.log(number1, operatorKey, number2)
+        if(operatorIndex === -1) {
+            number1 = inputFormula.slice(0, inputFormula.length-1);
+            number2 = '';
+            operatorKey = '';
+        } else {      
+            number1 = inputFormula.slice(0, operatorIndex+1);
+            operatorKey = inputFormula.slice(operatorIndex+1, operatorIndex+2);
+            number2 = inputFormula.slice(operatorIndex+2, inputFormula.length-1);
+            console.log(number1, operatorKey, number2)
+
+        }
+  
     }
 
     //build the object to pass to the server side for calculation
